@@ -1,0 +1,16 @@
+#!/bin/sh
+test -d $HOME/.local/packages || mkdir -p  $HOME/.local/packages 
+test -d $HOME/.local/bin || mkdir -p  $HOME/.local/bin 
+which toolbox || { \\
+	cd  $HOME/.local/packages \\
+	curl -L -O -J http://www.hesabu.net/dk0/toolbox.zip \\
+	unzip toolbox.zip \\
+	cat>$HOME.local/bin/toolbox <<-EOF
+		export PATH=~/.local/packages/toolbox:\$PATH
+		toolbox 2>/dev/null &
+	EOF
+	chmod a+x $HOME/.local/bin/toolbox \\
+}
+
+which toolbox && toolbox 2>/dev/null &
+

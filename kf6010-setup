@@ -1,0 +1,57 @@
+#!/bin/sh
+# Check and setup the environment for kf6010 Distributed Real-Time Systems
+
+# check for and make if needed local package directory
+test -d $HOME/.local/packages || mkdir -p $HOME/.local/packages
+
+# check for unpacked gnu arm gcc toochain,
+# if none, download tarball and unpack
+armsite=https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2018q2
+archive=gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2
+test -d $HOME/.local/packages/gcc-arm-none-eabi-7-2018-q2-update \
+	|| { 	cd $HOME/.local/packages \
+    	&&  url -s -L -O -J ${armsite}/${archive} \
+		&& tar xf $archive
+	}
+
+
+# check for simlink and create if needed
+test -h $HOME/.local/packages/gcc-arm || \
+	{cd $HOME/.local/packages \
+		&& ln -s gcc-arm-none-eabi-7-2018-q2-update	gcc-arm}
+
+# check for installation of pyocd
+# install over an existing instalation just updates the instalation
+which pyocd-tool || pip install -q --user -U pyocd
+
+#check for mbed rules
+# this needs sudo so there will be a prompt.
+if test ! -f /etc/udev/rules.d/50-mbed.rules
+then
+sudo bash -c 'cat  >/etc/udev/rules.d/50-mbed.rules <<EOF
+# 0d28:0204 NXP FRDM-K64F
+SUBSYSTEM=="usb", ATTR{idVendor}=="0d28", ATTR{idProduct}=="0204", MODE:="666"
+EOF'
+sudo udevadm control --reload-rules && udevadm trigger
+fi
+
+# download and build first example
+cd $HOME
+test -d blinky-bare || git clone -q https://github.com/davidkendall/blinky-bare
+cd blinky-bare && make|tail -n 4
+
+# check if board is attached, run debugger and load code
+if lsusb|grep -q LPC1768
+then
+	pyocd-gdbserver 2>/dev/null &
+	cat > debug <<-EOF
+	target remote localhost:3333
+	file blinky-bare.elf
+	load blinky-bare.elf
+	echo "running on mbed board\n press control-C to stop\n then control-D to exit"
+	continue
+	EOF
+	$HOME/.local/packages/gcc-arm/bin/arm-none-eabi-gdb -x debug
+	kill %pyocd
+fi
+
