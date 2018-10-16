@@ -8,17 +8,18 @@ test -d $HOME/.local/packages || mkdir -p $HOME/.local/packages
 # if none, download tarball and unpack
 armsite=https://developer.arm.com/-/media/Files/downloads/gnu-rm/7-2018q2
 archive=gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2
-test -d $HOME/.local/packages/gcc-arm-none-eabi-7-2018-q2-update \
-	|| { 	cd $HOME/.local/packages \
-    	&&  url -s -L -O -J ${armsite}/${archive} \
-		&& tar xf $archive
+test -d $HOME/.local/packages/gcc-arm-none-eabi-7-2018-q2-update || 
+	{
+ 	cd $HOME/.local/packages 
+    	curl  -L -O -J ${armsite}/${archive} 
+	tar xf $archive
 	}
 
 
 # check for simlink and create if needed
-test -h $HOME/.local/packages/gcc-arm || \
-	{	cd $HOME/.local/packages \
-		&& ln -s gcc-arm-none-eabi-7-2018-q2-update	gcc-arm \
+test -h $HOME/.local/packages/gcc-arm || 
+	{	cd $HOME/.local/packages 
+		ln -s gcc-arm-none-eabi-7-2018-q2-update	gcc-arm 
 	}
 
 # check for installation of pyocd

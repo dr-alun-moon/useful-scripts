@@ -1,6 +1,10 @@
 #!/bin/sh
-sudo apt-get -y install libusb-1.0-0-dev libudev-dev mercurial
-pip install --user -U jsonschema
+#sudo apt-get -y install libusb-1.0-0-dev libudev-dev mercurial
+#pip install --user -U jsonschema
+#export PATH=${PATH#/home/student/anaconda3/bin:}
+conda create -n py27 python=2.7
+source activate py27
+sudo apt-get install -y mercurial
 pip install --user -U pyOCD 
 pip install --user -U mbed-cli
 mbed config -G GCC_ARM_PATH ~/.local/packages/gcc-arm/bin
