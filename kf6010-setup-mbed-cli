@@ -1,0 +1,11 @@
+#!/bin/sh
+sudo apt-get -y install libusb-1.0-0-dev libudev-dev mercurial
+pip install mbed-cli
+pip install jsonschema
+pip install pyOCD 
+mbed config -G GCC_ARM_PATH ~/.local/packages/gcc-arm/bin
+git clone https://github.com/davidkendall/blinky-mbed
+cd blinky-mbed
+mbed new .
+mbed deploy
+mbed compile -t GCC_ARM -m K64F -f
