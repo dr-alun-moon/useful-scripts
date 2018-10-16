@@ -17,8 +17,9 @@ test -d $HOME/.local/packages/gcc-arm-none-eabi-7-2018-q2-update \
 
 # check for simlink and create if needed
 test -h $HOME/.local/packages/gcc-arm || \
-	{cd $HOME/.local/packages \
-		&& ln -s gcc-arm-none-eabi-7-2018-q2-update	gcc-arm}
+	{	cd $HOME/.local/packages \
+		&& ln -s gcc-arm-none-eabi-7-2018-q2-update	gcc-arm \
+	}
 
 # check for installation of pyocd
 # install over an existing instalation just updates the instalation
