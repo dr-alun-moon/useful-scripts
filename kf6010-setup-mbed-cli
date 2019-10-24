@@ -1,10 +1,10 @@
 #!/bin/sh
 #sudo apt-get -y install libusb-1.0-0-dev libudev-dev mercurial
-#pip install --user -U jsonschema
+pip install --user -U jsonschema
 #export PATH=${PATH#/home/student/anaconda3/bin:}
-conda create -n py27 python=2.7
-source activate py27
-sudo apt-get install -y mercurial
+#conda create -n py27 python=2.7
+#source activate py27
+#sudo apt-get install -y mercurial
 pip install --user -U 'colorama>=0.3.3'
 pip install --user -U 'PySerial>=2.7'
 pip install --user -U 'PrettyTable>=0.7.2'
